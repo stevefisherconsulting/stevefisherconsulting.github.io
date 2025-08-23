@@ -129,9 +129,7 @@ const AboutPage = () => {
                   <h3 className="text-lg font-semibold text-zinc-900">International Experience</h3>
                 </div>
                 <p className="text-zinc-600 mb-4">
-                  Steve has built custom homes throughout California and has been involved in "Habitat For Humanity"
-                  for Katrina victims, onsite for the Kobe (Japan) earthquake disaster, the Phuket (Thailand) Tsunami
-                  disaster, and recently a mission trip to Haiti to deliver supplies and anti-cholera medicine.
+                  Steve has built custom homes throughout California and has been involved in Habitat For Humanity for Katrina victims, served onsite during the Kobe earthquake disaster in Japan, aided recovery efforts after the Phuket tsunami in Thailand, and joined a mission trip to Haiti to deliver supplies and anti-cholera medicine. His international outreach has also extended to projects and relief work in China, the Philippines, Brazil, the Cayman Islands, and Nigeria, reflecting a broad commitment to global humanitarian service.
                 </p>
                 <motion.a
                   href="/steve-fisher-credentials.txt"

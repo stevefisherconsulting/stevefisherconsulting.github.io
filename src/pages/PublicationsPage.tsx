@@ -18,7 +18,7 @@ const PublicationsPage = () => {
     {
       icon: Trophy,
       title: 'Expert Witness Record',
-      description: '24+ years of construction defect analysis and litigation support',
+      description: '25 years + of defect analysis and  4000 cases analyzed',
       details: ['500+ cases analyzed', 'Mediation and trial testimony', 'Cost analysis and repair methodologies', 'Technical construction consulting']
     }
   ]
