@@ -50,6 +50,8 @@ export default tseslint.config({
 ```
 
 run as follows:
+npm install
+npm run build
 git add .
 git commit -m "update"
 git push origin main
