@@ -58,8 +58,12 @@ const AboutPage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex justify-center"
             >
-              <div className="w-64 h-64 bg-yellow-100 rounded-full flex items-center justify-center">
-                <User className="w-32 h-32 text-yellow-600" />
+              <div className="w-64 h-64 rounded-full overflow-hidden ring-4 ring-yellow-200 shadow-xl">
+                <img
+                  src="/uploads/profile.png"
+                  alt="Steve Fisher"
+                  className="w-full h-full object-cover object-center"
+                />
               </div>
             </motion.div>
           </div>

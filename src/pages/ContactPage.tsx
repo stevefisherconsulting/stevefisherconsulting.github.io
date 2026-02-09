@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare, User, FileText } from 'lucide-react'
 import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,11 @@ const ContactPage = () => {
     company: '',
     caseType: '',
     message: '',
+    website: '', // honeypot (spam trap)
   })
+
+  const [isSending, setIsSending] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -19,10 +24,57 @@ const ContactPage = () => {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Form submitted:', formData)
+
+    // Honeypot: bots often fill hidden fields. If it's filled, silently succeed.
+    if (formData.website) {
+      setStatus('success')
+      return
+    }
+
+    setIsSending(true)
+    setStatus('idle')
+
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('Missing EmailJS environment variables. Set VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY.')
+      }
+
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name,
+          reply_to: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          case_type: formData.caseType,
+          message: formData.message,
+        },
+        { publicKey }
+      )
+
+      setStatus('success')
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        caseType: '',
+        message: '',
+        website: '',
+      })
+    } catch (err) {
+      console.error(err)
+      setStatus('error')
+    } finally {
+      setIsSending(false)
+    }
   }
 
   const contactInfo = [
@@ -55,7 +107,7 @@ const ContactPage = () => {
     'Litigation Support',
     'Technical Consulting',
     'Building Inspection',
-    'Other'
+    'Other',
   ]
 
   return (
@@ -100,6 +152,17 @@ const ContactPage = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot (spam trap) */}
+                <input
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleInputChange}
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-zinc-700 mb-2">
@@ -220,13 +283,27 @@ const ContactPage = () => {
 
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-yellow-400 text-zinc-900 font-semibold py-4 px-6 rounded-lg hover:bg-yellow-300 transition-colors flex items-center justify-center space-x-2"
+                  disabled={isSending}
+                  whileHover={!isSending ? { scale: 1.02 } : undefined}
+                  whileTap={!isSending ? { scale: 0.98 } : undefined}
+                  className={`w-full font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2 ${
+                    isSending ? 'bg-yellow-200 text-zinc-600 cursor-not-allowed' : 'bg-yellow-400 text-zinc-900 hover:bg-yellow-300'
+                  }`}
                 >
                   <Send className="w-5 h-5" />
-                  <span>Send Message</span>
+                  <span>{isSending ? 'Sending…' : 'Send Message'}</span>
                 </motion.button>
+
+                {status === 'success' && (
+                  <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg p-3">
+                    Message sent. You’ll receive a response within 24 hours.
+                  </p>
+                )}
+                {status === 'error' && (
+                  <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg p-3">
+                    Failed to send. Please try again, or email directly at stevefisherconsulting@gmail.com.
+                  </p>
+                )}
               </form>
             </motion.div>
 
