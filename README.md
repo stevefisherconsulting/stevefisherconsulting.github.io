@@ -48,3 +48,8 @@ export default tseslint.config({
   },
 })
 ```
+
+run as follows:
+git add .
+git commit -m "update"
+git push origin main
