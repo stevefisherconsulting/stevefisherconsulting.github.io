@@ -53,5 +53,5 @@ run as follows:
 npm install
 npm run build
 git add .
-git commit -m "update"
+git commit -m "Build and Deployment"
 git push origin main
