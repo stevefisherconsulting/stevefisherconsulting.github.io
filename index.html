@@ -4,11 +4,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Force non-www -->
   <script>
     if (window.location.hostname === "www.stevefisherconsulting.com") {
       window.location.replace("https://stevefisherconsulting.com" + window.location.pathname);
     }
   </script>
+
+  <!-- Restore original path after GitHub Pages 404 redirect -->
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var redirect = params.get("redirect");
+      if (redirect) {
+        window.history.replaceState(null, "", redirect);
+      }
+    })();
+  </script>
+
 </head>
 
 <body>
