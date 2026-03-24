@@ -52,6 +52,7 @@ export default tseslint.config({
 run as follows:
 npm install
 npm run build
+npm run preview
 git add .
 git commit -m "Build and Deployment"
 git push origin main
